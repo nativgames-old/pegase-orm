@@ -1,0 +1,11 @@
+schema-create:
+  prefix: 'schema:create'
+  class: PegaseORM\Command\SchemaCommands
+  method: create
+
+schema:drop
+  prefix: 'schema:drop'
+  class: PegaseORM\Command\SchemaCommands
+  method: drop
+
+
