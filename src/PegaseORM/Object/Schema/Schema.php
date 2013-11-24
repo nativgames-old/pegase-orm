@@ -21,6 +21,20 @@ class Schema {
     return $this->tables;
   }
 
+  public function get_table_with_name() {
+    $table = null;
+
+    foreach($this->tables as $t) {
+      if($t->get_name() == $classname) {
+        $table = $t;
+        break;
+      }
+      else;
+    }
+
+    return $table;
+  }
+
   public function get_table_with_classname($classname) {
     $table = null;
 

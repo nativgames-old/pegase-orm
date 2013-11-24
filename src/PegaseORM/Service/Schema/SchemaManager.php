@@ -31,7 +31,11 @@ class SchemaManager implements ServiceInterface {
 
       foreach($params as $name => $class) {
 
-        $table = new Table($name, $class['class'], $class['repo_class']);
+        $table = new Table($name,
+                           $class['module'], 
+                           $class['class'], 
+                           $class['repo_class'],
+                           key_exists('constraints', $class) ? $class['constraints'] : array());
 
         foreach($class['columns'] as $n => $col) {
           $table->add_column($n, $col['type'], $col['size'], $col['constraints']);
@@ -64,7 +68,7 @@ class SchemaManager implements ServiceInterface {
     $ret = true;
 
     foreach($this->schema->get_tables() as $t) {
-      $ret = $ret && $this->create_table($t);
+      $ret = $this->create_table($t) && $ret;
     }
 
     return $ret;
@@ -75,7 +79,7 @@ class SchemaManager implements ServiceInterface {
     $ret = true;
 
     foreach($this->schema->get_tables() as $t) {
-      $ret = $ret && $this->update_table($t);
+      $ret = $this->update_table($t) && $ret;
     }
 
     return $ret;
@@ -83,11 +87,22 @@ class SchemaManager implements ServiceInterface {
 
   public function drop() {
 
-    $ret = true;
+    $ret = false;
 
-    foreach($this->schema->get_tables() as $t) {
-      $ret = $ret && $this->drop_table($t);
-    }
+    do {
+      $continue = false;
+
+      // si une table au moins est supprimée, alors ça veut dire qu'il faut continuer
+      // car si on essaie de supprimer une table référencée par une autre cela ne marchera pas.
+
+      foreach($this->schema->get_tables() as $t) {
+        $continue = $continue || $this->drop_table($t);
+      }
+
+      if($continue == true)
+        $ret = true;
+
+    } while($continue == true);
 
     return $ret;
   }
@@ -115,6 +130,12 @@ class SchemaManager implements ServiceInterface {
       $sql .= ", ";
     }
 
+    if(count($table->get_constraints()) > 0) {
+      foreach($table->get_constraints() as $c) {
+        $sql .= $c . ", ";
+      }
+    }
+
     $sql = substr($sql, 0, strlen($sql) - 2);
 
     $sql .= ");";
@@ -133,6 +154,17 @@ class SchemaManager implements ServiceInterface {
   public function drop_table($table) {
     // création de la requête
     $sql = "DROP TABLE ";
+    $sql .= $table->get_name();
+    $sql .= ";";
+
+    // exécution de la requête
+
+    return $this->db->query($sql);
+  }
+
+  public function truncate_table($table) {
+    // on tronque la table
+    $sql = "TRUNCATE ";
     $sql .= $table->get_name();
     $sql .= ";";
 

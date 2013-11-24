@@ -3,9 +3,13 @@ schema-create:
   class: PegaseORM\Command\SchemaCommands
   method: create
 
-schema:drop
+schema:drop:
   prefix: 'schema:drop'
   class: PegaseORM\Command\SchemaCommands
   method: drop
 
+schema:truncate:
+  prefix: 'schema:truncate'
+  class: PegaseORM\Command\SchemaCommands
+  method: drop
 

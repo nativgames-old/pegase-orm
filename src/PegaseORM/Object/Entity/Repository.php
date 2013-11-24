@@ -2,7 +2,7 @@
 
 namespace PegaseORM\Object\Entity;
 
-class AbstractRepository {
+class Repository {
 
   protected $db;
   protected $table;
