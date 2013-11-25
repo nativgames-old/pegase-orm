@@ -88,7 +88,7 @@ class EntityManager implements ServiceInterface {
     $sql = substr($sql, 0, strlen($sql) - 2);
     $sql .= ");";
 
-    echo $sql, "\n";
+    //echo $sql, "\n";
 
     // exécution de la requête
 
@@ -147,7 +147,7 @@ class EntityManager implements ServiceInterface {
     $sql .= $entity->get_id();
     $sql .= ";";
 
-    echo $sql;
+    //echo $sql;
 
     // exécution de la requête
 

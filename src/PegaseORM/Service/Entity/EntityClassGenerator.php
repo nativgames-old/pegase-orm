@@ -91,7 +91,7 @@ class ' . $classname . ' {
       $content .= '    return $this;' . "\n";
       $content .= '  }' . "\n";
 
-      $content .= '  public function get_' . $col[0] . '($' . $col[0] .") {\n";
+      $content .= '  public function get_' . $col[0] . "() {\n";
       $content .= '    return $this->' . $col[0] . ";\n";
       $content .= '  }' . "\n\n";
     }

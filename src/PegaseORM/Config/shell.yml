@@ -2,14 +2,21 @@ schema-create:
   prefix: 'schema:create'
   class: PegaseORM\Command\SchemaCommands
   method: create
+  parameters: create_parameters
 
 schema:drop:
   prefix: 'schema:drop'
   class: PegaseORM\Command\SchemaCommands
   method: drop
+  parameters: drop_parameters
 
-schema:truncate:
-  prefix: 'schema:truncate'
-  class: PegaseORM\Command\SchemaCommands
-  method: drop
+#schema:truncate:
+#  prefix: 'schema:truncate'
+#  class: PegaseORM\Command\SchemaCommands
+#  method: truncate
+#  parameters: truncate_parameters
 
+generate:entities:
+  class: PegaseORM\Command\EntityClassGeneratorCommands
+  method: generate
+  parameters: generate_parameters

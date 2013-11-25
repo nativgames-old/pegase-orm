@@ -6,14 +6,14 @@ use Pegase\Core\Shell\Command\AbstractShellCommand;
 
 class SchemaCommands extends AbstractShellCommand {
   
-  public function create() {
+  public function create($service) {
 
     $output = $this->output;
     $formater = $this->formater;
 
     // 1) on récupère les éléments à afficher
 
-    $orm = $this->sm->get('il_db');
+    $orm = $this->sm->get($service);
 
     $schema_manager = $orm->get_schema_manager();
     $tables = $schema_manager->get_schema()->get_tables();
@@ -31,14 +31,24 @@ class SchemaCommands extends AbstractShellCommand {
     );
   }
 
-  public function drop() {
+  public function create_parameters() {
+    return array(
+      array(
+        'service',
+         AbstractShellCommand::IS_REQUIRED,
+         'Which pegase-orm service must be used ?'
+      )
+    );
+  }
+
+  public function drop($service) {
 
     $output = $this->output;
     $formater = $this->formater;
 
     // 1) on récupère les éléments à afficher
 
-    $orm = $this->sm->get('il_db');
+    $orm = $this->sm->get($service);
 
     $schema_manager = $orm->get_schema_manager();
     $tables = $schema_manager->get_schema()->get_tables();
@@ -53,6 +63,16 @@ class SchemaCommands extends AbstractShellCommand {
     $output
       ->write_line(
       $s
+    );
+  }
+
+  public function drop_parameters() {
+    return array(
+      array(
+        'service',
+         AbstractShellCommand::IS_REQUIRED,
+         'Which pegase-orm service must be used ?'
+      )
     );
   }
 }

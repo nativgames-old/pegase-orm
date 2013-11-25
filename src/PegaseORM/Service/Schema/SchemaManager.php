@@ -20,6 +20,9 @@ class SchemaManager implements ServiceInterface {
     $this->sm = $sm;
     $this->schema = null;
 
+    $yaml = $this->sm->get('pegase.component.yaml.spyc');
+    $mm = $this->sm->get('pegase.core.module_manager');
+
     if($params != null) {
 
       if(!is_array($params)) {
@@ -30,6 +33,14 @@ class SchemaManager implements ServiceInterface {
       $this->schema = new Schema();
 
       foreach($params as $name => $class) {
+
+        if(key_exists('import', $class)) {
+          $tmp = $yaml->parse($mm->get_path($class['module'], $class['import']));
+          // we add the elements of tmp in the class
+          foreach($tmp as $n => $t) {
+            $class[$n] = $t;
+          }
+        }
 
         $table = new Table($name,
                            $class['module'], 
@@ -68,7 +79,13 @@ class SchemaManager implements ServiceInterface {
     $ret = true;
 
     foreach($this->schema->get_tables() as $t) {
-      $ret = $this->create_table($t) && $ret;
+      $r = $this->create_table($t);
+      $ret = $r && $ret;
+      
+      if($r)
+        echo "OK\n";
+      else
+        echo "NOT OK\n";
     }
 
     return $ret;
